@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.6.1">
+<meta name="description" content="Présentation de la structure de tableau">
+<meta name="author" content="O. Capuozzo">
+<title>Tableau en TS/JS</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Tableau en TS/JS</h1>
+<div class="details">
+<span id="author" class="author">O. Capuozzo</span><br>
+<span id="revnumber">version 1.0,</span>
+<span id="revdate">2020-12-07</span>
+<br><span id="revremark">Version asciidoc</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table des matieres</div>
+<ul class="sectlevel1">
+<li><a href="#présentation">Présentation</a></li>
+<li><a href="#tableau-et-itération">Tableau et itération</a>
+<ul class="sectlevel2">
+<li><a href="#introduction">Introduction</a>
+<ul class="sectlevel3">
+<li><a href="#déclaration">Déclaration</a></li>
+<li><a href="#opérations-de-type-non-mutateur">Opérations de type non-mutateur</a></li>
+<li><a href="#différentes-façons-de-boucler-sur-un-tableau">Différentes façons de boucler sur un tableau</a></li>
+<li><a href="#mutateurs">Mutateurs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="présentation"><a class="anchor" href="#présentation"></a>Présentation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="images/cogitas.png" alt="cogitas" width="200" title="cogitas"></span></p>
+</div>
+<div class="paragraph">
+<p>Support de cours sur une introduction à la structure de tableau en TS/JS</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tableau-et-itération"><a class="anchor" href="#tableau-et-itération"></a>Tableau et itération</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="introduction"><a class="anchor" href="#introduction"></a>Introduction</h3>
+<div class="paragraph">
+<p><code>Array</code> est la structure qui permet de représenter une liste de valeurs.</p>
+</div>
+<div class="paragraph">
+<p>Par <em>valeur</em> on entend les types primitifs et autres (tableau  compris).</p>
+</div>
+<div class="sect3">
+<h4 id="déclaration"><a class="anchor" href="#déclaration"></a>Déclaration</h4>
+<div class="paragraph">
+<p>Deux syntaxes possibles :</p>
+</div>
+<div class="paragraph">
+<p>La plus courante :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">  let list: number[] = [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>La forme utilisant la syntaxe de type générique <code>Array&lt;elemType&gt;</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">  let list: Array&lt;number&gt; = [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Il est fortement recommandé d&#8217;utiliser des déclarations de liste <strong>typée</strong> dans le but de mettre en évidence des problèmes de conception. Exemples :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">  let list: number[] = [<span class="integer">1</span>, <span class="integer">2</span>, , <span class="integer">3</span>];  <span class="comment">// ERROR car `undefined` n'est pas un number</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">  let list: number[] = [<span class="integer">1</span>, <span class="integer">2</span>, <span class="predefined-constant">NaN</span>, <span class="integer">3</span>];  <span class="comment">// OK (`NaN` est un nombre qui n'en n'est pas un...)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>La methode <code>Array.of()</code> permet de créer une nouvelle instance d&#8217;objet Array à partir d&#8217;un nombre variable d&#8217;arguments, quelque soit leur nombre ou leur type.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"> let list: number[] = Array.of(<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="opérations-de-type-non-mutateur"><a class="anchor" href="#opérations-de-type-non-mutateur"></a>Opérations de type non-mutateur</h4>
+<div class="paragraph">
+<p>Ce sont les opérations les plus courantes, elles <strong>n&#8217;altère pas</strong> la collection sur laquelle elle agit. On les qualifie de <strong><em>fonctions pures</em></strong>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Rechercher un élément (par exemple le premier) : <code>indexOf()</code>, <code>lastIndexOf()</code></p>
+</li>
+<li>
+<p>Opérations permettant de rechercher un sous-ensemble d&#8217;éléments (par exemple tous sauf le premier et le dernier) : <code>slice()</code>, <code>filter()</code></p>
+</li>
+<li>
+<p>Déterminer une information calculée du tableau  : <code>reduce()</code></p>
+</li>
+<li>
+<p>Prédicat : Vérifier une proposition (par exemple "est une liste de nombres impairs") : <code>every()</code>, <code>some()</code></p>
+</li>
+<li>
+<p>Nouvelle version du tableau : <code>map()</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Vous trouverez la présentation des fonctions sur les tableaux à cette adresse :
+<a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array">Documentation en ligne developer.mozilla : Array</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="différentes-façons-de-boucler-sur-un-tableau"><a class="anchor" href="#différentes-façons-de-boucler-sur-un-tableau"></a>Différentes façons de boucler sur un tableau</h4>
+<div class="paragraph">
+<p>JavaScript propose plusieurs méthodes d&#8217;itération. Nous en exploitons ici les plus populaires.</p>
+</div>
+<div class="paragraph">
+<p>Plusieurs méthodes utilisent des fonctions comme argument. Ces fonctions sont utilisées afin de traiter, d&#8217;une façon ou d&#8217;une autre, l&#8217;un après l&#8217;autre tout élément du tableau.</p>
+</div>
+<div class="paragraph">
+<p>L&#8217;exemple ci-dessous montre <strong>9 façons différentes</strong> (!) de résoudre la question : "<em>Combien y a-t-il de personnages maîtres référencés dans la liste ?</em>".</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 1. exemple en TypeScript</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="comment">// Déclaration d'un type à partir d'une énumération de valeurs possibles.</span>
+<span class="comment">// Très pratique et impossible à faire avec une Interface.</span>
+type Force =
+  <span class="keyword">typeof</span> Personnage.FORCE_ZERO
+  | <span class="keyword">typeof</span> Personnage.FORCE_PETITE
+  | <span class="keyword">typeof</span> Personnage.FORCE_MOYENNE
+  | <span class="keyword">typeof</span> Personnage.FORCE_GRANDE;
+
+<span class="reserved">class</span> Personnage {
+ <span class="reserved">static</span> readonly FORCE_PETITE = <span class="integer">20</span>;
+ <span class="reserved">static</span> readonly FORCE_MOYENNE = <span class="integer">50</span>;
+ <span class="reserved">static</span> readonly FORCE_GRANDE = <span class="integer">80</span>;
+ <span class="reserved">static</span> readonly FORCE_ZERO = <span class="integer">0</span>;
+
+ <span class="reserved">private</span> force : Force;
+
+<span class="reserved">public</span> constructor(forceInitiale : Force = Personnage.FORCE_ZERO){
+  <span class="local-variable">this</span>.force = forceInitiale;
+}
+<span class="reserved">public</span> getForce() : Force {
+  <span class="keyword">return</span> <span class="local-variable">this</span>.force;
+}
+
+<span class="comment">// on remarquera ici le typage fort pratique du paramètre !</span>
+<span class="comment">// Ainsi le développeur n'a pas à tester de la validitié ou non de la</span>
+<span class="comment">// valeur du paramètre reçu, car forcément acceptable.</span>
+<span class="reserved">public</span> setForce(force : Force) : <span class="keyword">void</span> {
+  <span class="keyword">if</span>  (<span class="local-variable">this</span>.force !== force) {
+     <span class="local-variable">this</span>.force = force;
+  }
+}
+
+<span class="reserved">public</span> isMaster()  : <span class="reserved">boolean</span> {
+  <span class="keyword">return</span> <span class="local-variable">this</span>.force === Personnage.FORCE_GRANDE;
+}
+
+}
+
+console.clear();
+
+let p1: Personnage = <span class="keyword">new</span> Personnage(<span class="integer">80</span>);
+let p2: Personnage = <span class="keyword">new</span> Personnage(<span class="integer">20</span>);
+let p3: Personnage = <span class="keyword">new</span> Personnage(<span class="integer">80</span>);
+
+let ptab: Personnage[] = [p1, p2, p3];
+<span class="comment">// ou  Array.of(p1, p2, p3);</span>
+
+<span class="comment">//console.log(ptab.length); // 3</span>
+
+<span class="comment">///// for classique</span>
+
+let cpt : number = <span class="integer">0</span>;
+<span class="keyword">for</span> (let i=<span class="integer">0</span>; i &lt; ptab.length; i++) {
+   <span class="keyword">if</span> (ptab[i].isMaster()) cpt++;
+}
+console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Version classique : Le nombre de maîtres est </span><span class="delimiter">&quot;</span></span> + cpt);
+
+<span class="comment">///// for ... of</span>
+
+cpt = <span class="integer">0</span>;
+<span class="keyword">for</span> (const p of ptab) {
+  <span class="keyword">if</span> (p.isMaster()) cpt++;
+}
+console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Version for .. of   : Le nombre de maîtres est </span><span class="delimiter">&quot;</span></span> + cpt);
+
+<span class="comment">///// foreach V1 : la variable p représente l'élément courant du tableau,</span>
+<span class="comment">// avec fonction anonyme ayant comme paramètre un élément du tableau</span>
+
+cpt = <span class="integer">0</span>;
+ptab.forEach(<span class="keyword">function</span> (p) {<span class="keyword">if</span> (p.isMaster()) cpt++;});
+console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Version foreach V1 : Le nombre de maîtres est </span><span class="delimiter">&quot;</span></span> + cpt);
+
+<span class="comment">///// foreach V2 avec fonction fléchée (arrow function) -- écriture plus concise</span>
+
+cpt = <span class="integer">0</span>;
+ptab.forEach(p =&gt; {<span class="keyword">if</span> (p.isMaster()) cpt++;});
+console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Version foreach V2  : Le nombre de maîtres est </span><span class="delimiter">&quot;</span></span> + cpt);
+
+<span class="comment">// autre version, pas forcément mieux...</span>
+cpt = <span class="integer">0</span>;
+ptab.forEach(p =&gt; cpt = p.isMaster() ? cpt+<span class="integer">1</span>: cpt);
+console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Version foreach V2Bis  : Le nombre de maîtres est </span><span class="delimiter">&quot;</span></span> + cpt);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Le problème avec les différentes versions présentées ci-dessus, c&#8217;est qu&#8217;elles dépendent d&#8217;une variable dont la portée dépasse celle de la structure itérative (une portée plus "globale"). En effet, ces implémentations <strong>modifient la variable <code>cpt</code> déclarée en dehors de leur contexte</strong>. Donc leur résultat dépendra d&#8217;une part de la liste sur laquelle elles travaillent (ça c&#8217;est normal), <strong>et dautre part</strong> de la valeur de la variable <code>cpt</code> au moment de l&#8217;appel. Aïe&#8230;&#8203; Peut mieux faire !</p>
+</div>
+<div class="paragraph">
+<p>C&#8217;est ce que l&#8217;on appelle un <strong><em>effet de bord</em></strong> : leur usage change l&#8217;état du sytème qui les a activés (modificiation d&#8217;une variable globale).</p>
+</div>
+<div class="paragraph">
+<p>Afin d&#8217;éviter les effets de bords, nous allons nous intéresser à deux autres solutions : <code>filter</code> et <code>reduce</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 2. exemple filter</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="comment">///// filter : méthode de Array</span>
+
+<span class="comment">// filter : retourne un tableau composé des éléments du tableau courant (ici ptab)</span>
+<span class="comment">// dont les éléments vérifient la proposition passée en argument de filter.</span>
+<span class="comment">// Il ne nous reste plus qu'à interroger le nombre d'éléments de ce tableau</span>
+cpt = ptab.filter(p =&gt; p.isMaster()).length;
+console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Version filter  : Le nombre de maîtres est </span><span class="delimiter">&quot;</span></span> + cpt);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Critique : Solution élégante (claire et concise), mais qui passe par la création d&#8217;une nouvelle instance de tableau.</p>
+</div>
+<div class="paragraph">
+<p>La solution suivante (<strong>reduce</strong>) ne produit pas de tableau intermédiaire.</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 3. exemple reduce</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="comment">///// reduce : méthode de Array</span>
+
+<span class="comment">/*
+reduce : prend en argument une fonction « reducer » dont l’objectif est de retourner une valeur, sur la base d’un algorithme dont elle a le secret.
+
+Le plus souvent, cet algorithme se base sur les 2 premiers paramètres de la fonction reduce :
+
+- premier paramètre (appelé couramment accumulateur) correspond à la valeur retournée par le précédent appel à la fonction sur l’élément précédent (à l'étape initiale ce sera  soit la valeur du premier élément de la liste, soit la valeur par défaut passée au lancement de reduce, comme c’est le cas ici.)
+
+- deuxième paramètre représente l’élément en cours de traitement de la liste
+
+Remarque : la fonction «reducer» peut recevoir jusqu’à 4 paramètres (index de l’élément courant et référence au tableau en question)
+
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array/reduce
+ */</span>
+
+<span class="comment">// reduce : prend en arguent une fonction qui effectue une &quot;réduction&quot;,</span>
+<span class="comment">// ici met à jour un accumulateur conditionné par le fait que</span>
+<span class="comment">// le personnage courant est un maître.</span>
+const <span class="function">reducerMastersCount</span> = <span class="keyword">function</span> (accumulator: number, <span class="key">p</span>: Personnage): number {
+  <span class="keyword">return</span> p.isMaster() ? accumulator+<span class="integer">1</span> : accumulator
+};
+cpt = ptab.reduce(reducerMastersCount, <span class="integer">0</span>);
+console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Version reduce V1 : Le nombre de maîtres est </span><span class="delimiter">&quot;</span></span> + cpt);
+
+<span class="comment">// La syntaxe condensée de fonction anonyme (arrow function) est</span>
+<span class="comment">// possible ici car le corps de la fonction peut se résumer</span>
+<span class="comment">// en une seule expression (on en profite pour renommer un parametre)</span>
+const reducerMastersCountV2 = (nbMaster: number, <span class="key">p</span>: Personnage): number =&gt; p.isMaster() ? nbMaster+<span class="integer">1</span> : nbMaster;
+cpt = ptab.reduce(reducerMastersCountV2, <span class="integer">0</span>);
+console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Version reduce V2  : Le nombre de maîtres est </span><span class="delimiter">&quot;</span></span> + cpt);</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+La méthode <code>reduce</code> est une fonction efficace (en terme de consommation mémoire),  très générique et riche en paramètres. Le choix de nommage de ses paramètres doit être soigné pour gagner en compréhension.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Il est possible de mettre à jour un <code>array</code>, ou un objet, passé en premier argument de <code>reduce</code>. Le code suivant est équivalent à la fonction <code>filter</code>, mais réalisé avec <code>reduce</code>, <strong>juste pour la démonstration</strong>, car autant utiliser <code>filter</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 4. pour l&#8217;exemple - filter vs reduce</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td>
+  <td class="code"><pre>
+const <span class="function">reducerVFilter</span> =
+  <span class="keyword">function</span> (pfilters : Personnage[], <span class="key">p</span> : Personnage) : Personnage[] {
+    <span class="keyword">if</span> (p.isMaster()) {
+      pfilters.push(p);
+    }
+    <span class="keyword">return</span> pfilters
+  };
+
+cpt = ptab.reduce(reducerVFilter, []).length;
+console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Version reduce-filter : Le nombre de maîtres est </span><span class="delimiter">&quot;</span></span> + cpt);</pre></td>
+</tr></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On remarquera la valeur initiale (tableau vide), au lancement de <code>reduce</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="mutateurs"><a class="anchor" href="#mutateurs"></a>Mutateurs</h4>
+<div class="paragraph">
+<p>On appelle <em>mutateurs</em> des méthodes qui ont le pouvoir de <strong>modifier l&#8217;état</strong> de l&#8217;instance du tableau sur lequel elles sont appelées.</p>
+</div>
+<div class="paragraph">
+<p>À utiliser avec prudence.</p>
+</div>
+<div class="paragraph">
+<p>Attention à <code>length</code>, car contrairement à java, cet attribut est un mutateur ! Il est accessible en écriture (modifie la longueur du tableau)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">let tab = [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>];
+tab.length = <span class="integer">2</span>;  <span class="comment">// réduit le nombre d'éléments de la liste</span>
+console.log(JSON.stringify(tab)); <span class="comment">// [1, 2]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ces méthodes modifient le tableau avec lesquelles elles sont appelées. Exemple.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">let tab = [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>];
+tab.fill(<span class="integer">4</span>);
+console.log(JSON.stringify(tab)); <span class="comment">// [4, 4, 4]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Extraits de quelques unes de ces fonctions :</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>Array.prototype.fill()</code></dt>
+<dd>
+<p>Cette méthode remplie tous les éléments du tableau avec une même valeur, éventuellement entre un indice de début et un indice de fin.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.pop()</code></dt>
+<dd>
+<p>Cette méthode supprime le dernier élément du tableau et retourne cet élément.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.push()</code></dt>
+<dd>
+<p>Cette méthode ajoute un ou plusieurs éléments à la fin du tableau et retourne la nouvelle longueur du tableau.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.reverse()</code></dt>
+<dd>
+<p>Cette méthode renverse l&#8217;ordre des éléments du tableau - le premier élément devient le dernier, et le dernier devient le premier.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.shift()</code></dt>
+<dd>
+<p>Cette méthode supprime le premier élément du tableau et retourne cet élément.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.sort()</code></dt>
+<dd>
+<p>Cette méthode trie en place les éléments du tableau et retourne le tableau.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.splice()</code></dt>
+<dd>
+<p>Cette méthode permet d&#8217;ajouter ou de retirer des éléments du tableau.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.unshift()</code></dt>
+<dd>
+<p>Cette méthode permet d&#8217;ajouter un ou plusieurs éléments au début du tableau et renvoie la nouvelle longueur du tableau.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.copyWithin()</code></dt>
+<dd>
+<p>Cette méthode copie une série d&#8217;éléments d&#8217;un tableau dans le tableau courant.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Voir des exemples ici : <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array" class="bare">https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0<br>
+Last updated 2020-12-19 21:00:28 CET
+</div>
+</div>
+</body>
+</html>

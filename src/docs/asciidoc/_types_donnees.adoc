@@ -1,0 +1,15 @@
+= Types de base
+ifndef::backend-pdf[]
+:imagesdir: images
+endif::[]
+
+== Introduction
+
+JS distingue les "_types primitifs_" des _types références_, plus précisément
+on trouvera des *_valeurs immuables_* et des *_objets_* : les premiers sont des instances qui ne peuvent pas changer d'état, contrairement aux objets.
+
+== valeur immuable
+
+
+== valeur référence
+
