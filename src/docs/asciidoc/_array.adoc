@@ -58,6 +58,64 @@ Ce sont les opérations les plus courantes, elles *n'altère pas* la collection 
 Vous trouverez la présentation des fonctions sur les tableaux à cette adresse :
 https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array[Documentation en ligne developer.mozilla : Array]
 
+
+=== Mutateurs
+
+On appelle _mutateurs_ des méthodes qui ont le pouvoir de *modifier l'état* de l'instance du tableau sur lequel elles sont appelées.
+
+À utiliser avec prudence.
+
+Attention à `length`, car contrairement à java, cet attribut est un mutateur ! Il est accessible en écriture (modifie la longueur du tableau)
+
+[source, javascript]
+--
+let tab = [1, 2, 3];
+tab.length = 2;  // réduit le nombre d'éléments de la liste
+console.log(JSON.stringify(tab)); // [1, 2]
+--
+
+Ces méthodes modifient le tableau avec lesquelles elles sont appelées. Exemple.
+
+[source, javascript]
+--
+let tab = [1, 2, 3];
+tab.fill(4);
+console.log(JSON.stringify(tab)); // [4, 4, 4]
+--
+
+Extraits de quelques unes de ces fonctions :
+
+`Array.prototype.fill()`::
+Cette méthode remplie tous les éléments du tableau avec une même valeur, éventuellement entre un indice de début et un indice de fin.
+
+`Array.prototype.pop()`::
+Cette méthode supprime le dernier élément du tableau et retourne cet élément.
+
+`Array.prototype.push()`::
+Cette méthode ajoute un ou plusieurs éléments à la fin du tableau et retourne la nouvelle longueur du tableau.
+
+`Array.prototype.reverse()`::
+Cette méthode renverse l'ordre des éléments du tableau - le premier élément devient le dernier, et le dernier devient le premier.
+
+`Array.prototype.shift()`::
+Cette méthode supprime le premier élément du tableau et retourne cet élément.
+
+`Array.prototype.sort()`::
+Cette méthode trie en place les éléments du tableau et retourne le tableau.
+
+`Array.prototype.splice()`::
+Cette méthode permet d'ajouter ou de retirer des éléments du tableau.
+
+`Array.prototype.unshift()`::
+Cette méthode permet d'ajouter un ou plusieurs éléments au début du tableau et renvoie la nouvelle longueur du tableau.
+
+`Array.prototype.copyWithin()`::
+Cette méthode copie une série d'éléments d'un tableau dans le tableau courant.
+
+Voir des exemples ici : https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+
+
 === Différentes façons de boucler sur un tableau
 
 JavaScript propose plusieurs méthodes d'itération. Nous en exploitons ici les plus populaires.
@@ -158,9 +216,9 @@ console.log("Version foreach V2Bis  : Le nombre de maîtres est " + cpt);
 
 ----
 
-Le problème avec les différentes versions présentées ci-dessus, c'est qu'elles dépendent d'une variable dont la portée dépasse celle de la structure itérative (une portée plus "globale"). En effet, ces implémentations *modifient la variable `cpt` déclarée en dehors de leur contexte*. Donc leur résultat dépendra d'une part de la liste sur laquelle elles travaillent (ça c'est normal), *et dautre part* de la valeur de la variable `cpt` au moment de l'appel. Aïe... Peut mieux faire !
+Le problème avec les différentes versions présentées ci-dessus, est qu'elles dépendent d'une variable dont la portée dépasse celle de la structure itérative (une portée plus "globale"). En effet, ces implémentations *modifient la variable `cpt` déclarée en dehors de leur contexte*. Donc leur résultat dépendra d'une part de la liste sur laquelle elles travaillent (ça c'est normal), *et dautre part* de la valeur de la variable `cpt` au moment de l'appel. Aïe... Peut mieux faire !
 
-C'est ce que l'on appelle un *_effet de bord_* : leur usage change l'état du sytème qui les a activés (modificiation d'une variable globale).
+C'est ce que l'on appelle un *_effet de bord_* : leur usage change l'état du sytème qui les a activés (modificiation d'une variable globale), mettant à mal l'aspect prédictif d'un programme.
 
 Afin d'éviter les effets de bords, nous allons nous intéresser à deux autres solutions : `filter` et `reduce`.
 
@@ -241,58 +299,3 @@ console.log("Version reduce-filter : Le nombre de maîtres est " + cpt);
 ----
 
 On remarquera la valeur initiale (tableau vide), au lancement de `reduce`.
-
-=== Mutateurs
-
-On appelle _mutateurs_ des méthodes qui ont le pouvoir de *modifier l'état* de l'instance du tableau sur lequel elles sont appelées.
-
-À utiliser avec prudence.
-
-Attention à `length`, car contrairement à java, cet attribut est un mutateur ! Il est accessible en écriture (modifie la longueur du tableau)
-
-[source, javascript]
---
-let tab = [1, 2, 3];
-tab.length = 2;  // réduit le nombre d'éléments de la liste
-console.log(JSON.stringify(tab)); // [1, 2]
---
-
-Ces méthodes modifient le tableau avec lesquelles elles sont appelées. Exemple.
-
-[source, javascript]
---
-let tab = [1, 2, 3];
-tab.fill(4);
-console.log(JSON.stringify(tab)); // [4, 4, 4]
---
-
-Extraits de quelques unes de ces fonctions :
-
-`Array.prototype.fill()`::
-  Cette méthode remplie tous les éléments du tableau avec une même valeur, éventuellement entre un indice de début et un indice de fin.
-
-`Array.prototype.pop()`::
-  Cette méthode supprime le dernier élément du tableau et retourne cet élément.
-
-`Array.prototype.push()`::
-  Cette méthode ajoute un ou plusieurs éléments à la fin du tableau et retourne la nouvelle longueur du tableau.
-
-`Array.prototype.reverse()`::
-  Cette méthode renverse l'ordre des éléments du tableau - le premier élément devient le dernier, et le dernier devient le premier.
-
-`Array.prototype.shift()`::
-  Cette méthode supprime le premier élément du tableau et retourne cet élément.
-
-`Array.prototype.sort()`::
-  Cette méthode trie en place les éléments du tableau et retourne le tableau.
-
-`Array.prototype.splice()`::
-  Cette méthode permet d'ajouter ou de retirer des éléments du tableau.
-
-`Array.prototype.unshift()`::
-  Cette méthode permet d'ajouter un ou plusieurs éléments au début du tableau et renvoie la nouvelle longueur du tableau.
-
-`Array.prototype.copyWithin()`::
-Cette méthode copie une série d'éléments d'un tableau dans le tableau courant.
-
-Voir des exemples ici : https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array

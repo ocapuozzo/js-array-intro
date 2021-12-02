@@ -32,8 +32,8 @@
 <ul class="sectlevel3">
 <li><a href="#déclaration">Déclaration</a></li>
 <li><a href="#opérations-de-type-non-mutateur">Opérations de type non-mutateur</a></li>
-<li><a href="#différentes-façons-de-boucler-sur-un-tableau">Différentes façons de boucler sur un tableau</a></li>
 <li><a href="#mutateurs">Mutateurs</a></li>
+<li><a href="#différentes-façons-de-boucler-sur-un-tableau">Différentes façons de boucler sur un tableau</a></li>
 </ul>
 </li>
 </ul>
@@ -137,6 +137,81 @@
 </div>
 </div>
 <div class="sect3">
+<h4 id="mutateurs"><a class="anchor" href="#mutateurs"></a>Mutateurs</h4>
+<div class="paragraph">
+<p>On appelle <em>mutateurs</em> des méthodes qui ont le pouvoir de <strong>modifier l&#8217;état</strong> de l&#8217;instance du tableau sur lequel elles sont appelées.</p>
+</div>
+<div class="paragraph">
+<p>À utiliser avec prudence.</p>
+</div>
+<div class="paragraph">
+<p>Attention à <code>length</code>, car contrairement à java, cet attribut est un mutateur ! Il est accessible en écriture (modifie la longueur du tableau)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">let tab = [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>];
+tab.length = <span class="integer">2</span>;  <span class="comment">// réduit le nombre d'éléments de la liste</span>
+console.log(JSON.stringify(tab)); <span class="comment">// [1, 2]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ces méthodes modifient le tableau avec lesquelles elles sont appelées. Exemple.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">let tab = [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>];
+tab.fill(<span class="integer">4</span>);
+console.log(JSON.stringify(tab)); <span class="comment">// [4, 4, 4]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Extraits de quelques unes de ces fonctions :</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>Array.prototype.fill()</code></dt>
+<dd>
+<p>Cette méthode remplie tous les éléments du tableau avec une même valeur, éventuellement entre un indice de début et un indice de fin.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.pop()</code></dt>
+<dd>
+<p>Cette méthode supprime le dernier élément du tableau et retourne cet élément.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.push()</code></dt>
+<dd>
+<p>Cette méthode ajoute un ou plusieurs éléments à la fin du tableau et retourne la nouvelle longueur du tableau.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.reverse()</code></dt>
+<dd>
+<p>Cette méthode renverse l&#8217;ordre des éléments du tableau - le premier élément devient le dernier, et le dernier devient le premier.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.shift()</code></dt>
+<dd>
+<p>Cette méthode supprime le premier élément du tableau et retourne cet élément.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.sort()</code></dt>
+<dd>
+<p>Cette méthode trie en place les éléments du tableau et retourne le tableau.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.splice()</code></dt>
+<dd>
+<p>Cette méthode permet d&#8217;ajouter ou de retirer des éléments du tableau.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.unshift()</code></dt>
+<dd>
+<p>Cette méthode permet d&#8217;ajouter un ou plusieurs éléments au début du tableau et renvoie la nouvelle longueur du tableau.</p>
+</dd>
+<dt class="hdlist1"><code>Array.prototype.copyWithin()</code></dt>
+<dd>
+<p>Cette méthode copie une série d&#8217;éléments d&#8217;un tableau dans le tableau courant.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Voir des exemples ici : <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array" class="bare">https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array</a></p>
+</div>
+</div>
+<div class="sect3">
 <h4 id="différentes-façons-de-boucler-sur-un-tableau"><a class="anchor" href="#différentes-façons-de-boucler-sur-un-tableau"></a>Différentes façons de boucler sur un tableau</h4>
 <div class="paragraph">
 <p>JavaScript propose plusieurs méthodes d&#8217;itération. Nous en exploitons ici les plus populaires.</p>
@@ -235,10 +310,10 @@ console.log(<span class="string"><span class="delimiter">&quot;</span><span clas
 </div>
 </div>
 <div class="paragraph">
-<p>Le problème avec les différentes versions présentées ci-dessus, c&#8217;est qu&#8217;elles dépendent d&#8217;une variable dont la portée dépasse celle de la structure itérative (une portée plus "globale"). En effet, ces implémentations <strong>modifient la variable <code>cpt</code> déclarée en dehors de leur contexte</strong>. Donc leur résultat dépendra d&#8217;une part de la liste sur laquelle elles travaillent (ça c&#8217;est normal), <strong>et dautre part</strong> de la valeur de la variable <code>cpt</code> au moment de l&#8217;appel. Aïe&#8230;&#8203; Peut mieux faire !</p>
+<p>Le problème avec les différentes versions présentées ci-dessus, est qu&#8217;elles dépendent d&#8217;une variable dont la portée dépasse celle de la structure itérative (une portée plus "globale"). En effet, ces implémentations <strong>modifient la variable <code>cpt</code> déclarée en dehors de leur contexte</strong>. Donc leur résultat dépendra d&#8217;une part de la liste sur laquelle elles travaillent (ça c&#8217;est normal), <strong>et dautre part</strong> de la valeur de la variable <code>cpt</code> au moment de l&#8217;appel. Aïe&#8230;&#8203; Peut mieux faire !</p>
 </div>
 <div class="paragraph">
-<p>C&#8217;est ce que l&#8217;on appelle un <strong><em>effet de bord</em></strong> : leur usage change l&#8217;état du sytème qui les a activés (modificiation d&#8217;une variable globale).</p>
+<p>C&#8217;est ce que l&#8217;on appelle un <strong><em>effet de bord</em></strong> : leur usage change l&#8217;état du sytème qui les a activés (modificiation d&#8217;une variable globale), mettant à mal l&#8217;aspect prédictif d&#8217;un programme.</p>
 </div>
 <div class="paragraph">
 <p>Afin d&#8217;éviter les effets de bords, nous allons nous intéresser à deux autres solutions : <code>filter</code> et <code>reduce</code>.</p>
@@ -344,81 +419,6 @@ console.log(<span class="string"><span class="delimiter">&quot;</span><span clas
 </div>
 <div class="paragraph">
 <p>On remarquera la valeur initiale (tableau vide), au lancement de <code>reduce</code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="mutateurs"><a class="anchor" href="#mutateurs"></a>Mutateurs</h4>
-<div class="paragraph">
-<p>On appelle <em>mutateurs</em> des méthodes qui ont le pouvoir de <strong>modifier l&#8217;état</strong> de l&#8217;instance du tableau sur lequel elles sont appelées.</p>
-</div>
-<div class="paragraph">
-<p>À utiliser avec prudence.</p>
-</div>
-<div class="paragraph">
-<p>Attention à <code>length</code>, car contrairement à java, cet attribut est un mutateur ! Il est accessible en écriture (modifie la longueur du tableau)</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="javascript">let tab = [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>];
-tab.length = <span class="integer">2</span>;  <span class="comment">// réduit le nombre d'éléments de la liste</span>
-console.log(JSON.stringify(tab)); <span class="comment">// [1, 2]</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Ces méthodes modifient le tableau avec lesquelles elles sont appelées. Exemple.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="javascript">let tab = [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>];
-tab.fill(<span class="integer">4</span>);
-console.log(JSON.stringify(tab)); <span class="comment">// [4, 4, 4]</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Extraits de quelques unes de ces fonctions :</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>Array.prototype.fill()</code></dt>
-<dd>
-<p>Cette méthode remplie tous les éléments du tableau avec une même valeur, éventuellement entre un indice de début et un indice de fin.</p>
-</dd>
-<dt class="hdlist1"><code>Array.prototype.pop()</code></dt>
-<dd>
-<p>Cette méthode supprime le dernier élément du tableau et retourne cet élément.</p>
-</dd>
-<dt class="hdlist1"><code>Array.prototype.push()</code></dt>
-<dd>
-<p>Cette méthode ajoute un ou plusieurs éléments à la fin du tableau et retourne la nouvelle longueur du tableau.</p>
-</dd>
-<dt class="hdlist1"><code>Array.prototype.reverse()</code></dt>
-<dd>
-<p>Cette méthode renverse l&#8217;ordre des éléments du tableau - le premier élément devient le dernier, et le dernier devient le premier.</p>
-</dd>
-<dt class="hdlist1"><code>Array.prototype.shift()</code></dt>
-<dd>
-<p>Cette méthode supprime le premier élément du tableau et retourne cet élément.</p>
-</dd>
-<dt class="hdlist1"><code>Array.prototype.sort()</code></dt>
-<dd>
-<p>Cette méthode trie en place les éléments du tableau et retourne le tableau.</p>
-</dd>
-<dt class="hdlist1"><code>Array.prototype.splice()</code></dt>
-<dd>
-<p>Cette méthode permet d&#8217;ajouter ou de retirer des éléments du tableau.</p>
-</dd>
-<dt class="hdlist1"><code>Array.prototype.unshift()</code></dt>
-<dd>
-<p>Cette méthode permet d&#8217;ajouter un ou plusieurs éléments au début du tableau et renvoie la nouvelle longueur du tableau.</p>
-</dd>
-<dt class="hdlist1"><code>Array.prototype.copyWithin()</code></dt>
-<dd>
-<p>Cette méthode copie une série d&#8217;éléments d&#8217;un tableau dans le tableau courant.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Voir des exemples ici : <a href="https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array" class="bare">https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Array</a></p>
 </div>
 </div>
 </div>
