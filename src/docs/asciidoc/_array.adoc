@@ -51,7 +51,7 @@ Ce sont les opérations les plus courantes, elles *n'altère pas* la collection 
 
 * Rechercher un élément (par exemple le premier) : `indexOf()`, `lastIndexOf()`
 * Opérations permettant de rechercher un sous-ensemble d'éléments (par exemple tous sauf le premier et le dernier) : `slice()`, `filter()`
-* Déterminer une information calculée du tableau  : `reduce()`
+* Déterminer une information calculée : `reduce()`
 * Prédicat : Vérifier une proposition (par exemple "est une liste de nombres impairs") : `every()`, `some()`
 * Nouvelle version du tableau : `map()`
 
