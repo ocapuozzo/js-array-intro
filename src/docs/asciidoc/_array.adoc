@@ -5,7 +5,7 @@ endif::[]
 
 == Introduction
 
-`Array` est la structure qui permet de représenter une liste de valeurs.
+`Array` est la structure qui permet de représenter une liste de valeurs indexée par des entiers (pas forcément contigus)
 
 Par _valeur_ on entend les types primitifs et autres (tableau  compris).
 
